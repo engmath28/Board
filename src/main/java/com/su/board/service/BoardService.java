@@ -6,8 +6,10 @@ import com.su.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // DTO -> Entity 변환
 // Entity -> DTO 변환
@@ -30,5 +32,21 @@ public class BoardService {
             boardDTOList.add(BoardDTO.toBoardDTO(boardEntity));
         }
         return boardDTOList;
+    }
+
+    @Transactional // J
+    public void updateHits(Long id) {
+        boardRepository.updateHits(id);
+
+    }
+
+    public BoardDTO findById(Long id) {
+        Optional<BoardEntity> optionalBoardEntity = boardRepository.findById(id);
+        if(optionalBoardEntity.isPresent()) {
+            return BoardDTO.toBoardDTO(optionalBoardEntity.get());
+        }else {
+            return null;
+        }
+
     }
 }
